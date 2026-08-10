@@ -23,21 +23,20 @@
     const TEXT = "I love you";
     
     // Dynamic sizing variables
-    let baseScale = 14;
-    let bFontSize = 70;
-    let textFontSize = 13;
+    let baseScale = 11;
+    let bFontSize = 55;
+    let textFontSize = 11;
 
     function resize() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
 
-      // Calculate based on screen size, reducing scale multiplier to leave safe margins on small screens
+      // Calculate based on screen size, scaled down further for compact display
       const minDimension = Math.min(canvas.width, canvas.height);
       
-      // Scaled down significantly for mobile screens
-      baseScale = minDimension / 28;       // Reduced scale to keep shape inside bounds
-      bFontSize = minDimension * 0.16;     // Smaller center B font
-      textFontSize = minDimension * 0.03;  // Smaller perimeter text font
+      baseScale = minDimension / 35;       // Scaled down heart outer radius
+      bFontSize = minDimension * 0.13;     // Scaled down center B font
+      textFontSize = minDimension * 0.026; // Scaled down perimeter text font
     }
     resize();
 
@@ -72,7 +71,7 @@
       ctx.restore();
 
       // --- 2. Scaled "I love you" Text ---
-      ctx.font = `bold ${Math.max(9, textFontSize)}px Arial`;
+      ctx.font = `bold ${Math.max(8, textFontSize)}px Arial`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
 
@@ -90,7 +89,7 @@
         ctx.save();
 
         ctx.shadowColor = pinkColor;
-        ctx.shadowBlur = 12;
+        ctx.shadowBlur = 10;
 
         ctx.fillStyle = pinkColor;
         ctx.translate(posX, posY);
