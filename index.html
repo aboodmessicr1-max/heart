@@ -19,25 +19,25 @@
 
     let angle = 0;
     let pulseTime = 0;
-    const NUM_STEPS = 85;
+    const NUM_STEPS = 80;
     const TEXT = "I love you";
     
     // Dynamic sizing variables
-    let baseScale = 22;
-    let bFontSize = 110;
-    let textFontSize = 18;
+    let baseScale = 14;
+    let bFontSize = 70;
+    let textFontSize = 13;
 
     function resize() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
 
-      // Calculate scale according to the smaller dimension (width or height)
+      // Calculate based on screen size, reducing scale multiplier to leave safe margins on small screens
       const minDimension = Math.min(canvas.width, canvas.height);
       
-      // Auto-scale elements so it never overflows on small screens
-      baseScale = minDimension / 22;      // Scales outer heart shape
-      bFontSize = minDimension * 0.22;    // Scales center 'B' font
-      textFontSize = minDimension * 0.038; // Scales perimeter text font
+      // Scaled down significantly for mobile screens
+      baseScale = minDimension / 28;       // Reduced scale to keep shape inside bounds
+      bFontSize = minDimension * 0.16;     // Smaller center B font
+      textFontSize = minDimension * 0.03;  // Smaller perimeter text font
     }
     resize();
 
@@ -54,8 +54,8 @@
       const cx = canvas.width / 2;
       const cy = canvas.height / 2;
 
-      // Slowed-down heartbeat pulse rhythm
-      const pulse = 1 + 0.1 * Math.pow(Math.sin(pulseTime), 63) + 0.04 * Math.sin(pulseTime * 2);
+      // Gentle heartbeat pulse rhythm
+      const pulse = 1 + 0.08 * Math.pow(Math.sin(pulseTime), 63) + 0.03 * Math.sin(pulseTime * 2);
       const currentScale = baseScale * pulse;
 
       // --- 1. Scaled Center "B" ---
@@ -72,7 +72,7 @@
       ctx.restore();
 
       // --- 2. Scaled "I love you" Text ---
-      ctx.font = `bold ${Math.max(10, textFontSize)}px Arial`;
+      ctx.font = `bold ${Math.max(9, textFontSize)}px Arial`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
 
@@ -90,7 +90,7 @@
         ctx.save();
 
         ctx.shadowColor = pinkColor;
-        ctx.shadowBlur = 15;
+        ctx.shadowBlur = 12;
 
         ctx.fillStyle = pinkColor;
         ctx.translate(posX, posY);
