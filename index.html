@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Glowing Pink Heart with Slow Pulse</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Glowing Pink Heart</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #000; overflow: hidden; display: flex; align-items: center; justify-content: center; height: 100vh; }
+    body { background: #000; overflow: hidden; display: flex; align-items: center; justify-content: center; height: 100vh; width: 100vw; }
     canvas { display: block; }
   </style>
 </head>
@@ -17,17 +17,29 @@
     const canvas = document.getElementById("c");
     const ctx = canvas.getContext("2d");
 
+    let angle = 0;
+    let pulseTime = 0;
+    const NUM_STEPS = 85;
+    const TEXT = "I love you";
+    
+    // Dynamic sizing variables
+    let baseScale = 22;
+    let bFontSize = 110;
+    let textFontSize = 18;
+
     function resize() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+
+      // Calculate scale according to the smaller dimension (width or height)
+      const minDimension = Math.min(canvas.width, canvas.height);
+      
+      // Auto-scale elements so it never overflows on small screens
+      baseScale = minDimension / 22;      // Scales outer heart shape
+      bFontSize = minDimension * 0.22;    // Scales center 'B' font
+      textFontSize = minDimension * 0.038; // Scales perimeter text font
     }
     resize();
-
-    let angle = 0;
-    let pulseTime = 0;
-    const NUM_STEPS = 90;     // Adjusted step count for optimal spacing
-    const BASE_SCALE = 22;    // Heart outer scale
-    const TEXT = "I love you";
 
     function heartX(t) { 
       return 16 * Math.pow(Math.sin(t), 3); 
@@ -43,28 +55,28 @@
       const cy = canvas.height / 2;
 
       // Slowed-down heartbeat pulse rhythm
-      const pulse = 1 + 0.12 * Math.pow(Math.sin(pulseTime), 63) + 0.05 * Math.sin(pulseTime * 2);
-      const currentScale = BASE_SCALE * pulse;
+      const pulse = 1 + 0.1 * Math.pow(Math.sin(pulseTime), 63) + 0.04 * Math.sin(pulseTime * 2);
+      const currentScale = baseScale * pulse;
 
-      // --- 1. Large Center "B" ---
+      // --- 1. Scaled Center "B" ---
       ctx.save();
-      ctx.font = "bold 110px Arial";
+      ctx.font = `bold ${bFontSize}px Arial`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       
       ctx.shadowColor = "#ff2a8d";
-      ctx.shadowBlur = 30;
+      ctx.shadowBlur = bFontSize * 0.25;
       
       ctx.fillStyle = "#ffffff";
       ctx.fillText("B", cx, cy);
       ctx.restore();
 
-      // --- 2. "I love you" Text (Pink & Glowing) ---
-      ctx.font = "bold 18px Arial";
+      // --- 2. Scaled "I love you" Text ---
+      ctx.font = `bold ${Math.max(10, textFontSize)}px Arial`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
 
-      const pinkColor = "#ff3388"; // Vibrant bright pink color
+      const pinkColor = "#ff3388";
 
       for (let i = 0; i < NUM_STEPS; i++) {
         const t = (i / NUM_STEPS) * Math.PI * 2 + angle;
@@ -77,9 +89,8 @@
 
         ctx.save();
 
-        // Strong pink neon glow
         ctx.shadowColor = pinkColor;
-        ctx.shadowBlur = 20;
+        ctx.shadowBlur = 15;
 
         ctx.fillStyle = pinkColor;
         ctx.translate(posX, posY);
@@ -87,8 +98,8 @@
         ctx.restore();
       }
 
-      angle += 0.008;      // Smooth rotation speed
-      pulseTime += 0.02;   // Slow pulse speed (reduced from 0.04)
+      angle += 0.008;      // Smooth rotation
+      pulseTime += 0.02;   // Slow pulse speed
       requestAnimationFrame(draw);
     }
 
